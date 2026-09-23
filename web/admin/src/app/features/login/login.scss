@@ -1,0 +1,16 @@
+:host { display: block; min-height: 100dvh; }
+.login-page { min-height: 100dvh; display: grid; grid-template-columns: minmax(320px, 1.05fr) minmax(420px, .95fr); }
+.brand-panel, .login-panel { padding: clamp(2rem, 5vw, 5rem); }
+.brand-panel { display: flex; flex-direction: column; justify-content: center; color: #f7f2e7; background: radial-gradient(circle at 18% 18%, rgb(105 181 145 / 35%), transparent 34%), linear-gradient(145deg, #102b25, #1d493d 62%, #24584a); }
+.brand-mark { width: 3.5rem; height: 3.5rem; display: grid; place-items: center; margin-bottom: 3rem; border-radius: 1.1rem 1.1rem 1.1rem .35rem; background: #d7f06f; color: #17352d; font: 800 1.45rem/1 var(--font-display); }
+h1 { max-width: 12ch; margin: .5rem 0 1.5rem; font: 700 clamp(3rem, 6vw, 6.5rem)/.94 var(--font-display); letter-spacing: -.06em; }
+.brand-copy { max-width: 35rem; color: rgb(247 242 231 / 76%); font-size: 1.08rem; line-height: 1.7; }
+.environment { margin-top: 4rem; color: rgb(247 242 231 / 54%); font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; }
+.login-panel { display: grid; place-items: center; background: #f3efe6; }
+.login-card { width: min(100%, 28rem); display: grid; gap: 1.25rem; }
+h2 { margin: .35rem 0; color: #17352d; font: 700 2.15rem/1.05 var(--font-display); letter-spacing: -.04em; }
+label { display: grid; gap: .5rem; color: #35534a; font-size: .84rem; font-weight: 700; }
+input { width: 100%; min-height: 3.2rem; border: 1px solid #c5d0ca; border-radius: .75rem; padding: .75rem .95rem; background: #fffdf7; color: #17352d; outline: none; }
+input:focus { border-color: #397966; box-shadow: 0 0 0 3px rgb(57 121 102 / 15%); }
+.alert { margin: 0; border-radius: .75rem; padding: .9rem 1rem; background: #ffe2d5; color: #8a3721; line-height: 1.45; }
+@media (max-width: 800px) { .login-page { grid-template-columns: 1fr; } .brand-panel { min-height: 42dvh; } .brand-mark, .environment { margin-top: 0; margin-bottom: 1.5rem; } }

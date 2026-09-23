@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap');
+
+:root {
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --font-display: 'Manrope', system-ui, sans-serif;
+  color-scheme: light;
+  font-family: var(--font-body);
+  background: #f4f1e9;
+  color: #213d34;
+  font-synthesis: none;
+}
+
+* { box-sizing: border-box; }
+html, body { min-height: 100%; margin: 0; }
+body { min-width: 320px; }
+button, input { font: inherit; }
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 3px solid rgb(215 240 111 / 70%);
+  outline-offset: 2px;
+}
+
+.eyebrow {
+  margin: 0;
+  color: #5d796f;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.muted { margin: 0; color: #75827d; line-height: 1.55; }
+
+.primary-button,
+.secondary-button,
+.compact-button {
+  border: 0;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.primary-button { min-height: 3.2rem; padding: 0.8rem 1.2rem; background: #17352d; color: #f7f2e7; }
+.secondary-button { min-height: 2.8rem; border: 1px solid #cbd3ce; padding: 0.65rem 1rem; background: #fffdf7; color: #29483e; }
+.compact-button { padding: 0.55rem 0.8rem; background: #d7f06f; color: #29432f; }
+button:disabled { cursor: not-allowed; opacity: 0.55; }

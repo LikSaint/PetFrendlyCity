@@ -1,0 +1,28 @@
+<main class="login-page">
+  <section class="brand-panel">
+    <div class="brand-mark" aria-hidden="true">P</div>
+    <p class="eyebrow">Pet-Friendly City</p>
+    <h1>Проверенные правила начинаются здесь.</h1>
+    <p class="brand-copy">Внутренний инструмент команды Баку: спрос пользователей, очередь звонков и история pet-policy.</p>
+    <div class="environment">Environment · {{ environment }}</div>
+  </section>
+
+  <section class="login-panel">
+    <form class="login-card" [formGroup]="form" (ngSubmit)="submit()">
+      <div>
+        <p class="eyebrow">Admin / CRM</p>
+        <h2>Вход для команды</h2>
+        <p class="muted">Используйте аккаунт, которому назначена активная роль.</p>
+      </div>
+      @if (!configured) {
+        <p class="alert">Runtime config не заполнен. Укажите SUPABASE_URL и SUPABASE_ANON_KEY в `.env.local`.</p>
+      }
+      <label><span>Email</span><input type="email" formControlName="email" autocomplete="username" placeholder="team@example.com" /></label>
+      <label><span>Пароль</span><input type="password" formControlName="password" autocomplete="current-password" placeholder="••••••••" /></label>
+      @if (errorMessage()) { <p class="alert">{{ errorMessage() }}</p> }
+      <button class="primary-button" type="submit" [disabled]="form.invalid || busy() || !configured">
+        {{ busy() ? 'Проверяем доступ…' : 'Войти' }}
+      </button>
+    </form>
+  </section>
+</main>

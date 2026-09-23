@@ -1,4 +1,4 @@
-name: Phase 0 checks
+name: Project checks
 
 on:
   push:
@@ -9,6 +9,25 @@ permissions:
   contents: read
 
 jobs:
+  admin:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24.12.0
+          cache: npm
+          cache-dependency-path: web/admin/package-lock.json
+      - name: Install Admin/CRM dependencies
+        working-directory: web/admin
+        run: npm ci --no-audit --no-fund
+      - name: Test Admin/CRM
+        working-directory: web/admin
+        run: npm test -- --watch=false
+      - name: Build Admin/CRM
+        working-directory: web/admin
+        run: npm run build
+
   ops-image:
     runs-on: ubuntu-latest
     steps:
@@ -19,6 +38,23 @@ jobs:
           docker compose --profile ops config --quiet
       - name: Build database operations image
         run: docker build --file infra/docker/ops.Dockerfile --tag pet-friendly-city-ops:ci .
+      - name: Build Admin/CRM image
+        run: docker build --file infra/docker/admin.Dockerfile --tag pet-friendly-city-admin:ci .
+      - name: Smoke-test Admin/CRM container
+        run: |
+          docker run --detach --rm --name pet-friendly-admin-ci \
+            --publish 127.0.0.1:18088:8080 \
+            --env APP_ENV=ci \
+            --env SUPABASE_URL=https://example.supabase.co \
+            --env SUPABASE_ANON_KEY=ci-placeholder \
+            pet-friendly-city-admin:ci
+          trap 'docker stop pet-friendly-admin-ci' EXIT
+          for attempt in 1 2 3 4 5; do
+            if curl --fail --silent http://127.0.0.1:18088/healthz; then exit 0; fi
+            sleep 1
+          done
+          docker logs pet-friendly-admin-ci
+          exit 1
 
   kmp-interop:
     runs-on: macos-15

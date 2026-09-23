@@ -1,0 +1,45 @@
+<header class="page-header">
+  <div><p class="eyebrow">Demand-driven verification</p><h1>CRM очередь</h1><p class="muted">Сначала реальные запросы пользователей, затем пассивный спрос и seed leads.</p></div>
+  <button class="secondary-button" type="button" (click)="reload()" [disabled]="loading()">{{ loading() ? 'Обновляем…' : 'Обновить' }}</button>
+</header>
+
+<section class="metrics" aria-label="Метрики очереди">
+  <article><span>Активные задачи</span><strong>{{ items().length }}</strong></article>
+  <article><span>Без оператора</span><strong>{{ unassigned() }}</strong></article>
+  <article><span>Запросы пользователей</span><strong>{{ totalRequests() }}</strong></article>
+</section>
+
+@if (errorMessage()) { <p class="alert">{{ errorMessage() }}</p> }
+
+<section class="queue-card">
+  <div class="queue-heading">
+    <div><h2>Приоритет проверки</h2><p>Одна активная задача на место — без дублей от повторных запросов.</p></div>
+    <span class="live-indicator"><i></i> Live data</span>
+  </div>
+  @if (loading()) {
+    <div class="empty-state">Загружаем очередь…</div>
+  } @else if (items().length === 0) {
+    <div class="empty-state"><strong>Очередь пуста</strong><span>Новые задачи появятся после Request Information или seed import.</span></div>
+  } @else {
+    <div class="table-wrap"><table>
+      <thead><tr><th>Место</th><th>Причина</th><th>Спрос</th><th>Priority</th><th>Статус</th><th></th></tr></thead>
+      <tbody>
+        @for (item of items(); track item.task_id) {
+          <tr>
+            <td><strong>{{ item.google_place_id || 'Place без Google ref' }}</strong><span>{{ item.created_at | date:'dd MMM, HH:mm' }}</span></td>
+            <td><span class="reason">{{ item.task_type }}</span></td>
+            <td><div class="demand"><span><b>{{ item.unique_requesters }}</b> requests</span><span><b>{{ item.place_open_count }}</b> opens</span><span><b>{{ item.navigation_count }}</b> routes</span></div></td>
+            <td><strong class="score">{{ item.priority_score | number:'1.0-0' }}</strong></td>
+            <td><span class="status" [class.owned]="item.assigned_to === currentUserId()">{{ item.task_status }}</span></td>
+            <td class="actions">
+              @if (!item.assigned_to) {
+                <button class="compact-button" type="button" (click)="claim(item)" [disabled]="claimingId() === item.task_id">{{ claimingId() === item.task_id ? 'Берём…' : 'Взять' }}</button>
+              } @else if (item.assigned_to === currentUserId()) { <span class="mine">Моя задача</span> }
+              @else { <span class="assigned">Назначена</span> }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table></div>
+  }
+</section>

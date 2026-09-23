@@ -24,6 +24,35 @@ x-database-ops: &database-ops
     - ops
 
 services:
+  admin:
+    image: pet-friendly-city-admin:${PET_FRIENDLY_IMAGE_TAG:-local}
+    build:
+      context: .
+      dockerfile: infra/docker/admin.Dockerfile
+    env_file:
+      - path: .env.local
+        required: true
+    ports:
+      - "${ADMIN_HTTP_BIND:-127.0.0.1}:${ADMIN_HTTP_PORT:-8088}:8080"
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp:uid=101,gid=101,mode=1777
+      - /usr/share/nginx/html/config:uid=101,gid=101,mode=0700
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8080/healthz || exit 1"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
   db-plan:
     <<: *database-ops
 

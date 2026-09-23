@@ -1,0 +1,18 @@
+:host { display: block; min-height: 100dvh; }
+.shell { min-height: 100dvh; display: grid; grid-template-columns: 17rem minmax(0, 1fr); background: #f4f1e9; }
+.sidebar { position: sticky; top: 0; height: 100dvh; display: flex; flex-direction: column; padding: 1.5rem; color: #eff4ef; background: #17352d; }
+.brand { display: flex; gap: .85rem; align-items: center; color: inherit; font: 700 1rem/1.05 var(--font-display); text-decoration: none; }
+.brand-mark { width: 2.5rem; height: 2.5rem; display: grid; place-items: center; border-radius: .8rem .8rem .8rem .25rem; background: #d7f06f; color: #17352d; }
+nav { display: grid; gap: .4rem; margin-top: 4rem; }
+nav a, .disabled-link { display: flex; align-items: center; gap: .75rem; min-height: 2.9rem; border-radius: .75rem; padding: 0 .8rem; color: rgb(239 244 239 / 65%); text-decoration: none; font-size: .9rem; }
+nav a:hover, nav a.active { color: #fff; background: rgb(255 255 255 / 8%); }
+.nav-icon { color: #9ab2a8; font-size: .7rem; letter-spacing: .08em; }
+.disabled-link small { margin-left: auto; color: #799087; font-size: .65rem; text-transform: uppercase; }
+.account { display: grid; grid-template-columns: auto 1fr auto; gap: .7rem; align-items: center; margin-top: auto; border-top: 1px solid rgb(255 255 255 / 10%); padding-top: 1.2rem; }
+.avatar { width: 2.35rem; height: 2.35rem; display: grid; place-items: center; border-radius: 50%; background: #397966; font-weight: 800; }
+.account-copy { min-width: 0; display: grid; gap: .15rem; }
+.account-copy strong { font-size: .72rem; letter-spacing: .08em; }
+.account-copy span { overflow: hidden; color: #9ab2a8; font-size: .72rem; text-overflow: ellipsis; }
+.account button { border: 0; background: transparent; color: #d7f06f; cursor: pointer; font-size: 1.2rem; }
+.content { min-width: 0; padding: clamp(1.5rem, 4vw, 4rem); }
+@media (max-width: 800px) { .shell { grid-template-columns: 1fr; } .sidebar { position: static; height: auto; } nav { grid-template-columns: repeat(3, 1fr); margin-top: 1.5rem; } .account { margin-top: 1rem; } }

@@ -9,7 +9,7 @@ keeps migration paths open without taking on self-hosted Supabase operations.
 - Linux server with Git;
 - Node.js 20 or newer and npm;
 - outbound HTTPS access to GitHub, npm and Supabase;
-- Docker for later Web/Admin containers (not required for remote DB migrations);
+- Docker Engine with the Compose plugin;
 - JDK 21 only if the server should run KMP checks.
 
 ## First checkout
@@ -58,9 +58,14 @@ npm run db:deploy:dry
 npm run db:deploy
 ```
 
-There is no long-running Web/Admin process yet: the repository is currently in
-the backend/schema phase. Phase 2 will add the Admin/CRM service, its production
-container and health check; Phase 5 will add the public SSR service.
+Restart the Admin/CRM service after applying migrations:
+
+```bash
+npm run docker:up
+curl --fail http://127.0.0.1:8088/healthz
+```
+
+The public SSR service is planned for Phase 5.
 
 ## Docker workflow
 
@@ -68,16 +73,30 @@ The current Compose project is intentionally isolated from other server projects
 
 - project name: `pet-friendly-city`;
 - network name: `pet-friendly-city-internal`;
-- no host ports;
+- Admin binds only to `127.0.0.1:8088` by default;
 - no persistent or shared volumes;
 - no Docker daemon restart;
-- containers are one-shot and removed after the command.
+- database-operation containers are one-shot and removed after the command;
+- the Admin container is the only long-running Phase 2 service.
 
 Build the pinned ops image:
 
 ```bash
 npm run docker:build
 ```
+
+Start or update Admin/CRM:
+
+```bash
+npm run docker:up
+npm run docker:logs
+```
+
+The Admin container exposes an HTTP health endpoint at
+`http://127.0.0.1:8088/healthz`. Put the existing server reverse proxy in front
+of this address and terminate TLS there. To use another loopback port, change
+`ADMIN_HTTP_PORT` in `.env.local`; do not expose the port publicly unless the
+server firewall and TLS proxy are configured for it.
 
 Preview database migrations from the container:
 
@@ -94,6 +113,25 @@ npm run docker:db:deploy
 Compose reads the same server-side `.env.local`; it is excluded from the image
 build context. The container runs as a non-root user with a read-only filesystem,
 dropped Linux capabilities and no host mounts.
+
+## First Admin user
+
+1. Create the operator in Supabase Authentication with an email and a strong
+   password. Do not store the password in `.env.local` or Git.
+2. In the Supabase SQL editor, assign an application role to that auth user:
+
+```sql
+insert into public.admin_users (user_id, role)
+select id, 'ADMIN'::public.admin_role
+from auth.users
+where email = 'replace-with-admin-email@example.com'
+on conflict (user_id) do update
+set role = excluded.role, active = true;
+```
+
+Use `CALLER` instead of `ADMIN` for operators who should only see unassigned
+tasks and tasks assigned to themselves. The browser receives only
+`SUPABASE_ANON_KEY`; authorization remains enforced by database RLS and RPCs.
 
 ## Production boundaries
 
