@@ -4,6 +4,8 @@
 посещения с собакой. Первый рынок — Баку, Азербайджан.
 
 Основной продуктовый и технический документ: [GDD v0.1](docs/GDD-v0.1.md).
+Локальные ключи и credentials хранятся только в `.env.local`; полный порядок
+описан в [docs/secrets.md](docs/secrets.md).
 
 ## Статус
 
@@ -16,7 +18,8 @@
 - подготовлены критерии ручной проверки Google Maps / Places UI Kit.
 
 Текущий прогресс и внешние prerequisites описаны в
-[Phase 0](docs/phase-0/README.md).
+[Phase 0](docs/phase-0/README.md). Backend/schema work продолжается в
+[Phase 1](docs/phase-1/README.md).
 
 ## Структура
 
