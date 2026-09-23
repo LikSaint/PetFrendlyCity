@@ -16,12 +16,16 @@ if (!existsSync(cliPath)) {
   process.exit(1);
 }
 
-let values;
+let fileValues = new Map();
 try {
-  values = await loadEnvFile(envPath);
+  fileValues = await loadEnvFile(envPath);
 } catch {
-  console.error("Missing .env.local. Copy .env.example and fill Supabase credentials.");
-  process.exit(1);
+  // Containers receive the same .env.local through Compose env_file.
+}
+
+const values = new Map(fileValues);
+for (const [key, value] of Object.entries(process.env)) {
+  if (value) values.set(key, value);
 }
 
 let credentials;

@@ -62,6 +62,39 @@ There is no long-running Web/Admin process yet: the repository is currently in
 the backend/schema phase. Phase 2 will add the Admin/CRM service, its production
 container and health check; Phase 5 will add the public SSR service.
 
+## Docker workflow
+
+The current Compose project is intentionally isolated from other server projects:
+
+- project name: `pet-friendly-city`;
+- network name: `pet-friendly-city-internal`;
+- no host ports;
+- no persistent or shared volumes;
+- no Docker daemon restart;
+- containers are one-shot and removed after the command.
+
+Build the pinned ops image:
+
+```bash
+npm run docker:build
+```
+
+Preview database migrations from the container:
+
+```bash
+npm run docker:db:plan
+```
+
+Apply only after reviewing the preview:
+
+```bash
+npm run docker:db:deploy
+```
+
+Compose reads the same server-side `.env.local`; it is excluded from the image
+build context. The container runs as a non-root user with a read-only filesystem,
+dropped Linux capabilities and no host mounts.
+
 ## Production boundaries
 
 - `.env.local` exists only on the target server;

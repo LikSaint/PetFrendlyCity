@@ -1,0 +1,14 @@
+.git
+.gitignore
+.gradle
+.kotlin
+**/build
+node_modules
+dist
+.env
+.env.*
+!.env.example
+supabase/.branches
+supabase/.temp
+*.log
+.DS_Store

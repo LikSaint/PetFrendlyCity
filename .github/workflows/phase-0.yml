@@ -9,6 +9,17 @@ permissions:
   contents: read
 
 jobs:
+  ops-image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Validate Compose configuration
+        run: |
+          cp .env.example .env.local
+          docker compose --profile ops config --quiet
+      - name: Build database operations image
+        run: docker build --file infra/docker/ops.Dockerfile --tag pet-friendly-city-ops:ci .
+
   kmp-interop:
     runs-on: macos-15
     steps:

@@ -10,6 +10,9 @@
     "db:lint": "supabase db lint --local",
     "db:deploy:dry": "node scripts/deploy-database.mjs",
     "db:deploy": "node scripts/deploy-database.mjs --apply",
+    "docker:build": "docker compose --profile ops build db-plan",
+    "docker:db:plan": "docker compose --profile ops run --rm db-plan",
+    "docker:db:deploy": "docker compose --profile ops run --rm db-deploy",
     "test:kmp": "./gradlew --no-daemon :mobile:shared:jvmTest"
   },
   "devDependencies": {

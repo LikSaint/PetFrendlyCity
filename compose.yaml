@@ -1,0 +1,38 @@
+name: pet-friendly-city
+
+x-database-ops: &database-ops
+  image: pet-friendly-city-ops:${PET_FRIENDLY_IMAGE_TAG:-local}
+  build:
+    context: .
+    dockerfile: infra/docker/ops.Dockerfile
+  env_file:
+    - path: .env.local
+      required: true
+  init: true
+  read_only: true
+  tmpfs:
+    - /tmp:mode=1777
+    - /workspace/supabase/.temp:uid=1000,gid=1000,mode=0700
+  cap_drop:
+    - ALL
+  security_opt:
+    - no-new-privileges:true
+  restart: "no"
+  networks:
+    - internal
+  profiles:
+    - ops
+
+services:
+  db-plan:
+    <<: *database-ops
+
+  db-deploy:
+    <<: *database-ops
+    command:
+      - --apply
+
+networks:
+  internal:
+    name: pet-friendly-city-internal
+    driver: bridge
