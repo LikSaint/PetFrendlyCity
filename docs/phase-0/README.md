@@ -9,15 +9,17 @@
 |---|---|---|---|
 | Google POI → Place ID | prepared | `GooglePlaceSelectionHandler.kt` | Нужны Android SDK и debug API key |
 | Places UI Kit Compact | blocked externally | checklist ниже | Нужны Android SDK, Google Cloud project и API key |
-| KMP ↔ SwiftUI | compiled, link pending | shared presenter + Swift ViewModel | JVM test проходит; Kotlin/Native компилируется; framework link требует full Xcode |
-| Supabase + PostGIS | implemented, test pending | migration + SQL test | Локальный Docker не запускает новые контейнеры; тест вынесен в CI |
+| KMP ↔ SwiftUI | framework linked in CI | shared presenter + Swift ViewModel | Добавлен Swift type-check против собранного framework |
+| Supabase + PostGIS | verified in CI | migration + SQL test | Migration, lint и 4 pgTAP assertions проходят |
 
 `blocked externally` означает, что репозиторий готов к проверке, но результат
 нельзя честно подтвердить без Google Cloud project, API key и native SDK.
 
 Автоматические проверки находятся в `.github/workflows/phase-0.yml`. KMP job
 использует macOS runner с Xcode, PostGIS job — отдельный database-only Supabase
-container и pgTAP. Локально JVM-тест подтверждён. Попытка запуска PostGIS была
+container и pgTAP. Первый CI-прогон подтвердил framework link, migration, lint и
+все 4 SQL assertions; дополнительно включён Swift type-check. Локально JVM-тест
+подтверждён. Попытка запуска PostGIS была
 остановлена, потому что Docker Engine зависает даже на новом `hello-world`, при
 этом уже работающий пользовательский контейнер не перезапускался.
 

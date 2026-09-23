@@ -22,6 +22,14 @@ jobs:
         run: xcodebuild -version
       - name: Test JVM contract and link iOS framework
         run: ./gradlew --no-daemon --console=plain :mobile:shared:jvmTest :mobile:shared:linkDebugFrameworkIosSimulatorArm64
+      - name: Type-check Swift bridge against shared framework
+        run: |
+          xcrun --sdk iphonesimulator swiftc \
+            -typecheck \
+            -target arm64-apple-ios18.0-simulator \
+            -sdk "$(xcrun --sdk iphonesimulator --show-sdk-path)" \
+            -F mobile/shared/build/bin/iosSimulatorArm64/debugFramework \
+            mobile/iosApp/iosApp/Spikes/PlacePreviewViewModel.swift
 
   postgis:
     runs-on: ubuntu-latest
@@ -36,6 +44,3 @@ jobs:
         run: supabase db lint --local --level error
       - name: Run pgTAP tests
         run: supabase test db
-      - name: Stop database
-        if: always()
-        run: supabase db stop
