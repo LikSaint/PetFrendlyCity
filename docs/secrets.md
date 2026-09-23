@@ -4,6 +4,9 @@
 Git. `.env.example` contains the complete variable inventory without values and
 is safe to commit.
 
+The same convention is used on the deployment server. The file should be owned
+by the deployment user with mode `600`.
+
 Rules:
 
 1. Never place real values in Gradle files, `Info.plist`, Angular environments,

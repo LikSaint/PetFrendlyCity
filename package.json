@@ -3,10 +3,13 @@
   "private": true,
   "scripts": {
     "secrets:check": "node scripts/secrets.mjs",
+    "server:check": "node scripts/server-check.mjs",
     "db:start": "supabase db start",
     "db:stop": "supabase db stop",
     "db:test": "supabase test db",
     "db:lint": "supabase db lint --local",
+    "db:deploy:dry": "node scripts/deploy-database.mjs",
+    "db:deploy": "node scripts/deploy-database.mjs --apply",
     "test:kmp": "./gradlew --no-daemon :mobile:shared:jvmTest"
   },
   "devDependencies": {

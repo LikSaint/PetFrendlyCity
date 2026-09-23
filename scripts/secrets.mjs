@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { loadEnvFile } from "./lib/env-file.mjs";
 
 const profiles = {
   "google-android": ["GOOGLE_MAPS_ANDROID_API_KEY"],
@@ -7,6 +7,8 @@ const profiles = {
     "SUPABASE_URL",
     "SUPABASE_ANON_KEY",
     "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_PROJECT_REF",
+    "SUPABASE_ACCESS_TOKEN",
     "SUPABASE_DB_PASSWORD",
   ],
   email: ["RESEND_API_KEY", "RESEND_FROM_EMAIL"],
@@ -26,23 +28,12 @@ if (!profile || !(profile in profiles)) {
   process.exit(2);
 }
 
-let source;
+let values;
 try {
-  source = await readFile(new URL("../.env.local", import.meta.url), "utf8");
+  values = await loadEnvFile(new URL("../.env.local", import.meta.url));
 } catch {
   console.error("Missing .env.local. Copy .env.example to .env.local first.");
   process.exit(1);
-}
-
-const values = new Map();
-for (const rawLine of source.split(/\r?\n/u)) {
-  const line = rawLine.trim();
-  if (!line || line.startsWith("#")) continue;
-  const separator = line.indexOf("=");
-  if (separator < 1) continue;
-  const key = line.slice(0, separator).trim();
-  const value = line.slice(separator + 1).trim().replace(/^(["'])(.*)\1$/u, "$2");
-  values.set(key, value);
 }
 
 const missing = profiles[profile].filter((key) => !values.get(key));

@@ -6,6 +6,7 @@
 Основной продуктовый и технический документ: [GDD v0.1](docs/GDD-v0.1.md).
 Локальные ключи и credentials хранятся только в `.env.local`; полный порядок
 описан в [docs/secrets.md](docs/secrets.md).
+Развёртывание из Git описано в [server runbook](docs/server-runbook.md).
 
 ## Статус
 
