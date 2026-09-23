@@ -1,14 +1,12 @@
 package city.petfriendly.shared.place
 
-@JvmInline
-value class ExternalPlaceId(val value: String) {
+data class ExternalPlaceId(val value: String) {
     init {
         require(value.isNotBlank()) { "External place id must not be blank" }
     }
 }
 
-@JvmInline
-value class PlaceId(val value: String)
+data class PlaceId(val value: String)
 
 enum class PlaceStatus {
     DISCOVERED,

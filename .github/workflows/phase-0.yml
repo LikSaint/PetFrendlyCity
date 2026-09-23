@@ -1,0 +1,41 @@
+name: Phase 0 checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  kmp-interop:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: gradle
+      - name: Show Xcode version
+        run: xcodebuild -version
+      - name: Test JVM contract and link iOS framework
+        run: ./gradlew --no-daemon --console=plain :mobile:shared:jvmTest :mobile:shared:linkDebugFrameworkIosSimulatorArm64
+
+  postgis:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: supabase/setup-cli@v2
+        with:
+          version: 2.117.0
+      - name: Start database and apply migrations
+        run: supabase db start
+      - name: Lint database
+        run: supabase db lint --local --level error
+      - name: Run pgTAP tests
+        run: supabase test db
+      - name: Stop database
+        if: always()
+        run: supabase db stop

@@ -7,13 +7,19 @@
 
 | Spike | Статус | Артефакт | Gate для завершения |
 |---|---|---|---|
-| Google POI → Place ID | prepared | `GooglePlaceSelectionHandler.kt` | Прогон на физическом Android-устройстве с debug API key |
-| Places UI Kit Compact | blocked externally | checklist ниже | Подтвердить компактную строку rating/review count и переход в Google Maps |
-| KMP ↔ SwiftUI | prepared | shared presenter + Swift ViewModel | Собрать Android/iOS targets с установленными JDK и Xcode toolchain |
-| Supabase + PostGIS | implemented locally | migration + SQL test | Выполнить тест через локальный Supabase stack |
+| Google POI → Place ID | prepared | `GooglePlaceSelectionHandler.kt` | Нужны Android SDK и debug API key |
+| Places UI Kit Compact | blocked externally | checklist ниже | Нужны Android SDK, Google Cloud project и API key |
+| KMP ↔ SwiftUI | compiled, link pending | shared presenter + Swift ViewModel | JVM test проходит; Kotlin/Native компилируется; framework link требует full Xcode |
+| Supabase + PostGIS | implemented, test pending | migration + SQL test | Локальный Docker не запускает новые контейнеры; тест вынесен в CI |
 
 `blocked externally` означает, что репозиторий готов к проверке, но результат
 нельзя честно подтвердить без Google Cloud project, API key и native SDK.
+
+Автоматические проверки находятся в `.github/workflows/phase-0.yml`. KMP job
+использует macOS runner с Xcode, PostGIS job — отдельный database-only Supabase
+container и pgTAP. Локально JVM-тест подтверждён. Попытка запуска PostGIS была
+остановлена, потому что Docker Engine зависает даже на новом `hello-world`, при
+этом уже работающий пользовательский контейнер не перезапускался.
 
 ## Google spike checklist
 

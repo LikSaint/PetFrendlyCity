@@ -30,13 +30,19 @@ infra/      инфраструктурная конфигурация
 
 ## Быстрый старт Phase 0
 
-Для локального PostGIS smoke test нужен Supabase CLI и работающий Docker:
+Supabase CLI закреплён как локальная npm dev-зависимость. Для PostGIS smoke test
+нужен работающий Docker:
 
 ```bash
-supabase start
-supabase db reset
-supabase test db supabase/tests/phase_0_postgis.test.sql
+npm install
+npm run db:start
+npm run db:lint
+npm run db:test
+npm run db:stop
 ```
+
+Shared KMP contract проверяется командой `npm run test:kmp`. Линковка iOS
+framework также выполняется в GitHub Actions на macOS runner с полным Xcode.
 
 Google spikes требуют отдельного debug API key. Ключи и локальные secret-файлы
 не коммитятся.
